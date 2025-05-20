@@ -75,6 +75,7 @@ int main(int argc, char **argv) {
     if (srsran_ssb_csi_search(&ssb, buffer, sf_len, &N_id, &meas) <
         SRSRAN_SUCCESS) {
       LOG_ERROR("Error performing SSB-CSI search");
+      continue;
     } else {
       srsran_csi_meas_info(&meas, str, sizeof(str));
       if (meas.rsrp != 0) {
@@ -86,6 +87,7 @@ int main(int argc, char **argv) {
         output_csv << "," << meas.n0;
         output_csv << "," << meas.n0_dB;
         output_csv << "," << meas.snr_dB << "\n";
+        output_csv.flush();
 
         LOG_DEBUG("CSI MEAS - search pci=%d %s", N_id, str);
       }

@@ -27,6 +27,7 @@ target_link_libraries(iq-agent PRIVATE
     -Wl,--end-group
 
     pthread
+    ${UHD_LIBRARIES}
 
 )
 

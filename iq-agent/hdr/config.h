@@ -56,10 +56,9 @@ static agent_config_t load(std::string config_path) {
   std::string log_level_str = toml["log"]["level"].value_or("error");
   conf.output_path = toml["log"]["output"].value_or("output.csv");
 
-  if (ssb_arfcn != 0) {
-    srsran::srsran_band_helper band_helper;
-    conf.rf.ssb_center_frequency_hz = band_helper.nr_arfcn_to_freq(ssb_arfcn);
-  }
+  LOG_DEBUG("using ARFCN");
+  srsran::srsran_band_helper band_helper;
+  conf.rf.ssb_center_frequency_hz = band_helper.nr_arfcn_to_freq(ssb_arfcn);
 
   switch (ssb_pattern[0]) {
   case 'a':
