@@ -1,0 +1,17 @@
+[log]
+level = "debug"
+output = "output.csv"
+
+[rf]
+#file_path = "/home/charles/collected_iq/pdcch_1842MHz_amarisoft.fc32"
+gain = 60
+sample_rate = 23040000
+ssb_numerology = 1
+nof_prb = 51
+arfcn = 620632
+rf_args = "type=b200,master_clock_rate=23.04e6"
+
+[ssb]
+pattern = "a"
+duplex_mode = "tdd"
+scs = 30

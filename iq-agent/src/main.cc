@@ -97,25 +97,7 @@ int main(int argc, char **argv) {
     if (srsran_ssb_search(&ssb, buffer, sf_len, &search_res) < SRSRAN_SUCCESS) {
       LOG_ERROR("Error performing SSB search");
     }
-
-    srsran_pbch_msg_info(&search_res.pbch_msg, str, sizeof(str));
-    if (!search_res.pbch_msg.crc) {
-      continue;
-    }
-    LOG_DEBUG("SSB PBCH - t_offset=%d pci=%d %s crc=%s", search_res.t_offset,
-              search_res.N_id, str, search_res.pbch_msg.crc ? "OK" : "KO");
     N_id = search_res.N_id;
-
-    // unpack MIB
-    srsran_mib_nr_t mib = {};
-    if (srsran_pbch_msg_nr_mib_unpack(&search_res.pbch_msg, &mib) <
-        SRSRAN_SUCCESS) {
-      LOG_ERROR("Error unpacking PBCH-MIB");
-    }
-
-    char mib_info[512] = {};
-    srsran_pbch_msg_nr_mib_info(&mib, mib_info, sizeof(mib_info));
-    LOG_INFO("MIB - %s", mib_info);
   }
 
   output_csv.close();

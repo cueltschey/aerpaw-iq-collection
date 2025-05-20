@@ -25,10 +25,6 @@ data_source::data_source(char *rf_args, double rf_gain, double rf_freq,
 
   std::cout << "UHD Configured: rate=" << srate << "Hz, freq=" << rf_freq
             << "Hz, gain=" << rf_gain << "dB\n";
-
-  uhd::stream_cmd_t stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
-  stream_cmd.stream_now = true;
-  rx_stream->issue_stream_cmd(stream_cmd);
 }
 
 data_source::~data_source() {
@@ -56,11 +52,15 @@ bool data_source::read(cf_t *output, int nof_samples) {
     return true;
   }
 
-  LOG_DEBUG(" ----  Receive %d samples  ---- ", nof_samples);
+  uhd::stream_cmd_t stream_cmd(
+      uhd::stream_cmd_t::STREAM_MODE_NUM_SAMPS_AND_DONE);
+  stream_cmd.stream_now = true;
+  stream_cmd.num_samps = nof_samples;
+  rx_stream->issue_stream_cmd(stream_cmd);
 
-  size_t received = rx_stream->recv(output, nof_samples, metadata, 1.0);
+  size_t received = rx_stream->recv(output, nof_samples, metadata);
   if (metadata.error_code != uhd::rx_metadata_t::ERROR_CODE_NONE) {
-    std::cerr << "UHD RX Error: " << metadata.strerror() << "\n";
+    LOG_ERROR("UHD RX Error: %s", metadata.strerror().c_str());
     return false;
   }
   return true;
