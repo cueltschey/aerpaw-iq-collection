@@ -1,8 +1,8 @@
 [log]
 level = "debug"
-output = "output.csv"
-#iq_enable = true
-#iq_output = "test.fc32"
+output = "/root/Results/collected_csi.csv"
+iq_enable = true
+iq_output = "/root/Results/collected_iq.fc32"
 
 [rf]
 #file_path = "/home/charles/collected_iq/pdcch_1842MHz_amarisoft.fc32"
