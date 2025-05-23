@@ -75,10 +75,6 @@ int main(int argc, char **argv) {
 
   cf_t *buffer = srsran_vec_cf_malloc(sf_len);
   while (src->read(buffer, sf_len)) {
-    if (conf.output_iq) {
-      output_iq.write(reinterpret_cast<const char *>(buffer),
-                      sizeof(cf_t) * sf_len);
-    }
     char str[512] = {};
     srsran_csi_trs_measurements_t meas = {};
     if (srsran_ssb_csi_search(&ssb, buffer, sf_len, &N_id, &meas) <
@@ -99,6 +95,11 @@ int main(int argc, char **argv) {
         output_csv.flush();
 
         LOG_DEBUG("CSI MEAS - search pci=%d %s", N_id, str);
+
+        if (conf.output_iq) {
+          output_iq.write(reinterpret_cast<const char *>(buffer),
+                          sizeof(cf_t) * sf_len);
+        }
       }
     }
 
