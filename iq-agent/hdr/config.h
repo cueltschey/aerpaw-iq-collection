@@ -36,6 +36,8 @@ typedef struct agent_config_s {
   rf_config_t rf;
   ssb_config_t ssb;
   std::string output_path;
+  std::string iq_path;
+  bool output_iq;
 } agent_config_t;
 
 static agent_config_t load(std::string config_path) {
@@ -55,8 +57,9 @@ static agent_config_t load(std::string config_path) {
   std::string duplex_mode = toml["ssb"]["duplex_mode"].value_or("error");
   std::string log_level_str = toml["log"]["level"].value_or("error");
   conf.output_path = toml["log"]["output"].value_or("output.csv");
+  conf.iq_path = toml["log"]["iq_output"].value_or("output.fc32");
+  conf.output_iq = toml["log"]["iq_enable"].value_or(false);
 
-  LOG_DEBUG("using ARFCN");
   srsran::srsran_band_helper band_helper;
   conf.rf.ssb_center_frequency_hz = band_helper.nr_arfcn_to_freq(ssb_arfcn);
 

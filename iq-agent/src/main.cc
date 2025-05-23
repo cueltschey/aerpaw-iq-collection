@@ -31,6 +31,11 @@ int main(int argc, char **argv) {
   }
   output_csv << "timestamp,rsrp,rsrp_dB,epre,epre_dB,n0,n0_dB,snr_dB\n";
 
+  std::ofstream output_iq;
+  if (conf.output_iq) {
+    output_iq = std::ofstream(conf.iq_path, std::ios::binary);
+  }
+
   LOG_DEBUG("Running with ssb freq: %f", conf.rf.ssb_center_frequency_hz);
 
   uint32_t sf_len = SRSRAN_SF_LEN_PRB(conf.rf.nof_prb);
@@ -70,6 +75,10 @@ int main(int argc, char **argv) {
 
   cf_t *buffer = srsran_vec_cf_malloc(sf_len);
   while (src->read(buffer, sf_len)) {
+    if (conf.output_iq) {
+      output_iq.write(reinterpret_cast<const char *>(buffer),
+                      sizeof(cf_t) * sf_len);
+    }
     char str[512] = {};
     srsran_csi_trs_measurements_t meas = {};
     if (srsran_ssb_csi_search(&ssb, buffer, sf_len, &N_id, &meas) <
@@ -101,6 +110,9 @@ int main(int argc, char **argv) {
   }
 
   output_csv.close();
+  if (conf.output_iq) {
+    output_iq.close();
+  }
 
   return SRSRAN_SUCCESS;
 }
