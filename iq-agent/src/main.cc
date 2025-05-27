@@ -29,7 +29,8 @@ int main(int argc, char **argv) {
     std::cerr << "Failed to open output file.\n";
     return EXIT_FAILURE;
   }
-  output_csv << "time,rsrp,rsrp_dB,epre,epre_dB,n0,n0_dB,snr_dB\n";
+  output_csv << "time,rsrp,rsrp_dB,epre,epre_dB,n0,n0_dB,snr_dB,nof_re,delay_"
+                "us,cfo_hz,cfo_hz_max\n";
 
   std::ofstream output_iq;
   if (conf.output_iq) {
@@ -39,12 +40,13 @@ int main(int argc, char **argv) {
   LOG_DEBUG("Running with ssb freq: %f", conf.rf.ssb_center_frequency_hz);
 
   uint32_t sf_len = SRSRAN_SF_LEN_PRB(conf.rf.nof_prb);
-  uint32_t N_id = 1;
+  uint32_t N_id = 500;
 
   srsran_ssb_t ssb = {};
   srsran_ssb_args_t ssb_args = {};
   ssb_args.enable_decode = true;
   ssb_args.enable_search = true;
+  ssb_args.enable_measure = true;
   if (srsran_ssb_init(&ssb, &ssb_args) < SRSRAN_SUCCESS) {
     LOG_ERROR("ssb init failed");
     return EXIT_FAILURE;
@@ -91,7 +93,11 @@ int main(int argc, char **argv) {
         output_csv << "," << meas.epre_dB;
         output_csv << "," << meas.n0;
         output_csv << "," << meas.n0_dB;
-        output_csv << "," << meas.snr_dB << "\n";
+        output_csv << "," << meas.snr_dB;
+        output_csv << "," << meas.nof_re;
+        output_csv << "," << meas.delay_us;
+        output_csv << "," << meas.cfo_hz;
+        output_csv << "," << meas.cfo_hz_max << "\n";
         output_csv.flush();
 
         LOG_DEBUG("CSI MEAS - search pci=%d %s", N_id, str);
