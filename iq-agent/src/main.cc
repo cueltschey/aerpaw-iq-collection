@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
     std::cerr << "Failed to open output file.\n";
     return EXIT_FAILURE;
   }
-  output_csv << "timestamp,rsrp,rsrp_dB,epre,epre_dB,n0,n0_dB,snr_dB\n";
+  output_csv << "time,rsrp,rsrp_dB,epre,epre_dB,n0,n0_dB,snr_dB\n";
 
   std::ofstream output_iq;
   if (conf.output_iq) {
